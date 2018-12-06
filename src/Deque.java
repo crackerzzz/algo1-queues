@@ -3,7 +3,7 @@ import java.util.NoSuchElementException;
 
 /***
  * <p>
- * Dequeue. A double-ended queue or deque (pronounced “deck”) is a
+ * Dequeue. A double-ended queue or deque (pronounced "deck") is a
  * generalization of a stack and a queue that supports adding and removing items
  * from either the front or the back of the data structure. Create a generic
  * data type Deque that implements the following API:
@@ -162,7 +162,10 @@ public class Deque<Item> implements Iterable<Item> {
     final Item item = removed.item;
 
     tail = tail.previous;
-    tail.next = null;
+    // when only single item is there.
+    if (tail != null) {
+      tail.next = null;
+    }
 
     removed.previous = null;
     removed.item = null;
@@ -222,7 +225,8 @@ public class Deque<Item> implements Iterable<Item> {
     final Deque<Integer> deck = new Deque<>();
     deck.addLast(1);
     deck.addLast(2);
-    System.out.println(deck.removeFirst());
+    System.out.println(deck.removeLast());
+    System.out.println(deck.removeLast());
     for (Integer i : deck) {
       System.out.println(i);
     }

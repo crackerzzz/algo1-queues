@@ -140,6 +140,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
       for (int i = 0; i < n; i++) {
         itrItems[i] = items[i];
       }
+      StdRandom.shuffle(itrItems);
     }
 
     @Override

@@ -1,4 +1,5 @@
 import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdRandom;
 
 /***
  * <p>
@@ -59,13 +60,15 @@ public class Permutation {
     }
     final int k = Integer.parseInt(args[0]);
 
+    String[] strs = StdIn.readAllStrings();
+    StdRandom.shuffle(strs);
+
     final RandomizedQueue<String> queue = new RandomizedQueue<>();
     for (int i = 0; i < k; i++) {
-      queue.enqueue(StdIn.readString());
+      queue.enqueue(strs[i]);
     }
-
-    for (String item : queue) {
-      System.out.println(item);
+    for (int i = 0; i < k; i++) {
+      System.out.println(queue.dequeue());
     }
   }
 

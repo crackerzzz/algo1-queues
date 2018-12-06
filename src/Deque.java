@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /***
  * 
@@ -47,44 +48,150 @@ public class Deque<Item> implements Iterable<Item> {
  *
  */
 public class Deque<Item> implements Iterable<Item> {
+    private Node head;
+    private Node tail;
+    private int n = 0;
+
     // construct an empty deque
     public Deque() {
     }
 
     // is the deque empty?
     public boolean isEmpty() {
-        return false;
+        return n == 0;
     }
 
     // return the number of items on the deque
     public int size() {
-        return -1;
+        return n;
     }
 
     // add the item to the front
     public void addFirst(Item item) {
+        if (item == null) {
+            throw new IllegalArgumentException("Item cannot be null");
+        }
+        if (head == null) {
+            head = new Node(item);
+            tail = head;
+        } else {
+            final Node oldHead = head;
+            head = new Node(item);
+            head.next = oldHead;
+            oldHead.previous = head;
+        }
+        n++;
     }
 
     // add the item to the end
     public void addLast(Item item) {
+        if (item == null) {
+            throw new IllegalArgumentException("Item cannot be null");
+        }
+        if (tail == null) {
+            tail = new Node(item);
+            head = tail;
+        } else {
+            final Node oldTail = tail;
+            tail = new Node(item);
+            oldTail.next = tail;
+            tail.previous = oldTail;
+        }
+        n++;
     }
 
     // remove and return the item from the front
     public Item removeFirst() {
-        return null;
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        final Node removed = head;
+        final Item item = removed.item;
+
+        head = head.next;
+        // when only single item is there.
+        if (head != null) {
+            head.previous = null;
+        }
+
+        removed.item = null;
+        removed.next = null;
+
+        // handle special condition
+        if (head == null) {
+            tail = null;
+        }
+        n--;
+        return item;
     }
 
     // remove and return the item from the end
     public Item removeLast() {
-        return null;
+        if (tail == null) {
+            throw new NoSuchElementException();
+        }
+        final Node removed = tail;
+        final Item item = removed.item;
+
+        tail = tail.previous;
+        tail.next = null;
+
+        removed.previous = null;
+        removed.item = null;
+
+        // handle special condition
+        if (tail == null) {
+            head = null;
+        }
+
+        n--;
+        return item;
     }
 
     // return an iterator over items in order from front to end
     public Iterator<Item> iterator() {
-        return null;
+        return new DequeIterator();
+    }
+
+    private class DequeIterator implements Iterator<Item> {
+        private Node current = head;
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @Override
+        public Item next() {
+            if (current == null) {
+                throw new NoSuchElementException();
+            }
+            final Item item = current.item;
+            current = current.next;
+            return item;
+        }
+
+    }
+
+    private class Node {
+        Item item;
+        Node previous;
+        Node next;
+
+        public Node(Item item) {
+            this.item = item;
+        }
     }
 
     // unit testing (optional)
     public static void main(String[] args) {
+        final Deque<Integer> deck = new Deque<>();
+//        deck.addFirst(3);
+        deck.addLast(1);
+        deck.addLast(2);
+        System.out.println(deck.removeFirst());
+        for (Integer i : deck) {
+            System.out.println(i);
+        }
     }
 }
